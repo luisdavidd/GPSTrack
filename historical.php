@@ -16,16 +16,19 @@
     <!-- Fav and touch icons -->
     <link rel="shortcut icon" href="images/ico/favicon.ico">
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
+
     <link rel="stylesheet" media="all" type="text/css" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
     <link rel="stylesheet" media="all" type="text/css" href="css/jquery-ui-timepicker-addon.css" />
 
   
+
 
 </head>
 <body class="master">
     <div class="mask"></div>
     <!---strat-wrap -->
     <div id="include"></div>
+
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js" ></script>
     <script type="text/javascript"> 
         $("#include").load("header.html"); 
@@ -39,6 +42,7 @@
 
     <div class="content">
         <!---start-about-us-->
+
 
         <div class="about-us">
             <div class="wrap">
@@ -86,12 +90,12 @@
     <!-- Load google maps api and call initializeMap function defined in app.js -->
     <!-- css3-mediaqueries.js for IE8 or older -->
     <script type="text/javascript" src="js/app.js"></script>
-
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui-timepicker-addon.js"></script>
     <script type="text/javascript" src="js/jquery-ui-sliderAccess.js"></script>
     <script type="text/javascript" src="js/picker.js"></script> 
+
 
  
 </body>

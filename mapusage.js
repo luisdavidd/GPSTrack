@@ -154,7 +154,7 @@ function processreadData(coordinates){
     flightPath.setMap(map);
 
     // Locate initial point
-    myinitialpot = new google.maps.LatLng(latC[0],lonC[0]);
+    myinitialpot = new google.maps.LatLng(latC[latC.length-2],lonC[lonC.length-2]);
     markerinit.setMap(null);
     markerinit = new google.maps.Marker({
         position: myinitialpot,
@@ -168,7 +168,7 @@ function processreadData(coordinates){
     markerinit.setMap(map);
 
     //Locate last point
-    myLatLnglast = new google.maps.LatLng(latC[latC.length-2],lonC[lonC.length-2]);
+    myLatLnglast = new google.maps.LatLng(latC[0],lonC[0]);
     marker.setMap(null); 
     marker = new google.maps.Marker({
         position: myLatLnglast,

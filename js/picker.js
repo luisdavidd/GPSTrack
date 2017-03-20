@@ -3,9 +3,9 @@
 */
 var map;
 var flightPlanCoordinates;
-var flightBlack;
-var markerf;
-var markeri;
+var flightPath;
+var markerinit;
+var marker;
 var myinitialpot;
 var myLatLnglast;
 var sended;
@@ -14,73 +14,30 @@ var tempini;
 var tempend;
 var newini;
 var newend;
+var calendar_output;
 sendnrecieve();
 
-function init()
-{
-	var startDateTextBox = $('#calendar_start');
-	var endDateTextBox = $('#calendar_end');
+function initp()
+{	
 
-
-	startDateTextBox.datetimepicker({ 
-		timeFormat: 'HH:mm:ss',
-		dateFormat: 'yy-mm-dd',
-		onClose: function(dateText, inst) {
-			if (endDateTextBox.val() != '') {
-					var testStartDate = startDateTextBox.datetimepicker('getDate');
-					var testEndDate = endDateTextBox.datetimepicker('getDate');
-				if (testStartDate > testEndDate)
-					endDateTextBox.datetimepicker('setDate', testStartDate);
-					sended = dateText;
-			}
-			else {
-				endDateTextBox.val(dateText);
-				sended = dateText;
-			}
-		},
-		onSelect: function (selectedDateTime){
-			endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
-		}
-	});
-	endDateTextBox.datetimepicker({ 
-		timeFormat: 'HH:mm:ss',
-		dateFormat: 'yy-mm-dd',
-		onClose: function(dateText, inst) {
-			if (startDateTextBox.val() != '') {
-					testStartDate = startDateTextBox.datetimepicker('getDate');
-					testEndDate = endDateTextBox.datetimepicker('getDate');
-				if (testStartDate > testEndDate)
-					startDateTextBox.datetimepicker('setDate', testEndDate);
-					sendst = dateText;
-			}
-			else {
-				startDateTextBox.val(dateText);
-				sendst = dateText;
-			}
-		},
-		onSelect: function (selectedDateTime){
-			startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
-		}
-	});
-		
-		/*
-			below code just enable time picker.
-		*/	
-		$('#basic_example_2').timepicker();
-
-		
-
-		return [sended,sendst];
-		
+    
+    calendar_output =  document.getElementById('date').value;
+   	calendar_output = calendar_output.replace(" - "," * ")
+    calendar_output = calendar_output.split("*");
+    calendar_startdate = calendar_output[0];
+    calendar_enddate = calendar_output[1];
+    return[calendar_startdate,calendar_enddate]
+    	
+   	
 };
 
 function sendnrecieve(){
 	
-	results = init();
+	results = initp();
 	tempini = results[0];
 	tempend = results[1];
 	setInterval(function(){
-			results = init();
+			results = initp();
 			newini = results[0];
 			newend = results[1];
 			if(newini!= tempini || newend!= tempend){
@@ -104,7 +61,6 @@ function remake(param1,param2){
      	data: ({init: param1,end:param2}),
 
      	success: function(coordinates){
-     		console.log(coordinates);
     		var entiredata = coordinates.split("*");
     		var coorC = [];
     		var latC  = [];
@@ -112,12 +68,6 @@ function remake(param1,param2){
     		var dateC = [];
     		var timeC = [];
     		var positionC = [];
-
-            var DATE;
-            var TIME;
-            var iore = 0;
-            var kinitial;
-            var kend;
     		for(i=0;i<entiredata.length;i++){
 		        coorC = entiredata[i].split(" ");
 		        latC.push(coorC[0]);
@@ -130,18 +80,12 @@ function remake(param1,param2){
 		    delete lonC[lonC.length-1];
 		    delete dateC[dateC.length-1];
 		    delete timeC[timeC.length-1];
-
-            aammddend = dateC[0].split("-");
-            hhmmssend = timeC[0].split(":");
-            aammddinit = dateC[latC.length-2].split("-");
-            hhmmssinit = timeC[latC.length-2].split(":");
-
-         		map.setOptions({styles: styles['retro']});7
+    		map.setOptions({styles: styles['retro']});7
     		var myLatLng = new google.maps.LatLng(latC[Math.round((latC.length - 2) / 2)],lonC[Math.round((lonC.length - 2) / 2)]);
 		    var myOptions = {
 		        scrollwheel: true,
 		        draggable: true,
-		        disableDefaultUI: false,
+		        //disableDefaultUI: true,
 		        mapTypeControl: false,
 		        scaleControl: true,
 		        zoomControl: true,
@@ -155,38 +99,45 @@ function remake(param1,param2){
 		        flightPlanCoordinates.push({lat:Number(latC[i]),lng:Number(lonC[i])});
 		    }
 
-
-		    //Poly Negra
-		    flightBlack.setPath(flightPlanCoordinates);
-		    	    
-
-		    // Locate initial point
-		    myinitialpot = new google.maps.LatLng(latC[latC.length-2],lonC[lonC.length-2]);
-		    markerf.setMap(null);
-		    markerf = new google.maps.Marker({
-		        position: myinitialpot,
-		        title: 'Current Position',
-		        icon: {
-		        url: "images/truckoff.png",
-		        scaledSize: new google.maps.Size(64*2/3, 78*2/3)
-		    }
+		    flightPath.setMap(null);
+		    flightPath = new google.maps.Polyline({
+		    path: flightPlanCoordinates,
+		    geodesic: true,
+		    //strokeColor: '#000000',
+		    strokeColor: '#FFCF00',
+		    strokeOpacity: 2.0,
+		    strokeWeight: 5
 		    });
 
-    		markerf.setMap(map);
+		    flightPath.setMap(map);
 
-		    //Locate last point
-		    myLatLnglast = new google.maps.LatLng(latC[0],lonC[0]);
-		    markeri.setMap(null); 
-		    markeri = new google.maps.Marker({
-		        position: myLatLnglast,
+		    // Locate initial point
+		    myinitialpot = new google.maps.LatLng(latC[0],lonC[0]);
+		    markerinit.setMap(null);
+		    markerinit = new google.maps.Marker({
+		        position: myinitialpot,
 		        title: 'Start',
 		        icon: {
 		        url: "images/init.png",
+		        scaledSize: new google.maps.Size(64, 78)
+		    }
+		    });
+
+    		markerinit.setMap(map);
+
+		    //Locate last point
+		    myLatLnglast = new google.maps.LatLng(latC[latC.length-2],lonC[lonC.length-2]) ;
+		    marker.setMap(null); 
+		    marker = new google.maps.Marker({
+		        position: myLatLnglast,
+		        title: 'Current Position',
+		        icon: {
+		        url: "images/truck.png",
 		        scaledSize: new google.maps.Size(64, 96)
 		    }
 		    });
     
-    		markeri.setMap(map);  
+    		marker.setMap(map);  
         }
 	}); 
 

@@ -55,8 +55,8 @@
         </div>
     </div>
 
-    <script src="js/mapusage.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCus7HdIsJX7I3Ny01zAZWVmwr6sy_Vky4&callback=initmap" async defer></script>
+    <script src="js/maphistoric.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCus7HdIsJX7I3Ny01zAZWVmwr6sy_Vky4&callback=initmapi" async defer></script>
 
    
     <!---start-contnet-->
@@ -84,7 +84,7 @@
                             <br><br><br>    
                </div>
 
-            <!---End-about---->
+            <!---End-about-->
          </div>
         <!---End-about-us-->
         

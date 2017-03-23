@@ -3,9 +3,9 @@
 */
 var map;
 var flightPlanCoordinates;
-var flightPath;
-var markerinit;
-var marker;
+var flightBlack;
+var markeri;
+var markerf;
 var myinitialpot;
 var myLatLnglast;
 var sended;
@@ -15,7 +15,21 @@ var tempend;
 var newini;
 var newend;
 var calendar_output;
+var markersArray = [];
+var cont = 0;
 sendnrecieve();
+    var circlep = new google.maps.Circle({
+      strokeColor: '#EBC14C',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#EBC14C', //FFCF00
+      fillOpacity: 0.35,
+      radius: 80,
+      visible: true,
+      editable: true,
+    });
+
+
 
 function initp()
 {	
@@ -80,7 +94,7 @@ function remake(param1,param2){
 		    delete lonC[lonC.length-1];
 		    delete dateC[dateC.length-1];
 		    delete timeC[timeC.length-1];
-    		map.setOptions({styles: styles['retro']});7
+    		map.setOptions({styles: styles['retro']});
     		var myLatLng = new google.maps.LatLng(latC[Math.round((latC.length - 2) / 2)],lonC[Math.round((lonC.length - 2) / 2)]);
 		    var myOptions = {
 		        scrollwheel: true,
@@ -93,51 +107,102 @@ function remake(param1,param2){
 		        zoom: 17
 		    };
 
-		    //Make Polyline
-		    flightPlanCoordinates = [{lat:Number(latC[0]),lng:Number(lonC[0])}];
-		    for(i=1;i<latC.length-1;i++){
-		        flightPlanCoordinates.push({lat:Number(latC[i]),lng:Number(lonC[i])});
-		    }
+            //Make Polyline
+            flightPlanCoordinates = [{lat:Number(latC[latC.length-2]),lng:Number(lonC[latC.length-2])}];
+            for(i=1;i<latC.length-1;i++){
+                flightPlanCoordinates.push({lat:Number(latC[(latC.length-2)-i]),lng:Number(lonC[(latC.length-2)-i])});
+            }
 
-		    flightPath.setMap(null);
-		    flightPath = new google.maps.Polyline({
-		    path: flightPlanCoordinates,
-		    geodesic: true,
-		    //strokeColor: '#000000',
-		    strokeColor: '#FFCF00',
-		    strokeOpacity: 2.0,
-		    strokeWeight: 5
-		    });
-
-		    flightPath.setMap(map);
+		    flightBlack.setPath(flightPlanCoordinates);
 
 		    // Locate initial point
-		    myinitialpot = new google.maps.LatLng(latC[0],lonC[0]);
-		    markerinit.setMap(null);
-		    markerinit = new google.maps.Marker({
-		        position: myinitialpot,
-		        title: 'Start',
-		        icon: {
-		        url: "images/init.png",
-		        scaledSize: new google.maps.Size(64, 78)
-		    }
-		    });
-
-    		markerinit.setMap(map);
+		    myinitialpot = new google.maps.LatLng(latC[latC.length-2],lonC[latC.length-2]);
+    		markeri.setPosition(myinitialpot);
 
 		    //Locate last point
-		    myLatLnglast = new google.maps.LatLng(latC[latC.length-2],lonC[lonC.length-2]) ;
-		    marker.setMap(null); 
-		    marker = new google.maps.Marker({
-		        position: myLatLnglast,
-		        title: 'Current Position',
-		        icon: {
-		        url: "images/truck.png",
-		        scaledSize: new google.maps.Size(64, 96)
-		    }
-		    });
+		    myLatLnglast = new google.maps.LatLng(latC[0],lonC[0]) ;
     
-    		marker.setMap(map);  
+    		markerf.setPosition(myLatLnglast); 
+
+
+    circlep.setCenter(myLatLnglast);
+    circlep.setMap(map); 
+    //////map.panTo(latLng);
+
+
+    google.maps.event.addListener(circlep,"center_changed", function(){
+        if (circlep.getVisible()==true){
+            areaData();
+        }
+        
+    });
+    google.maps.event.addListener(circlep,"radius_changed", function(){
+        if (circlep.getVisible()==true){
+            areaData();
+        }
+    });
+
+    
+   
+
+/////////////////Función ÁREA////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            function areaData(){
+                // circlep.setMap(map); 
+                // setCenterUI.addEventListener('click', function() {
+                //     console.log("entre aqui a click 2");
+                //     // var newCenter = map.getCenter();
+                //     // control.setCenter(newCenter);
+                //     if(stateb2==0){
+                //     console.log("ya me presionaron")
+                //     stateb2=1;
+                //     circlep.setVisible(true);
+                //     }else{
+                //     console.log("ya no")
+                //     stateb2=0;
+                //     circlep.setVisible(false);
+                //     for (v=0;v<markersArray.length;v++){
+                //         markersArray[v].setMap(null);
+                //     } 
+                //     }
+                //     console.log("Mi estado es: "+stateb2)
+                // }); 
+                for (v=0;v<markersArray.length;v++){
+                    markersArray[v].setMap(null);
+                }   
+                var bounds = circlep.getBounds();
+                var centerc = circlep.getCenter();
+                var centerlng = centerc.lng();
+                var centerlat = centerc.lat();
+                var east = bounds.getNorthEast();
+                var radiob = Math.abs(east.lng() - centerlng);
+
+                //latC.push(coorC[0]);
+                for(i=0;i<entiredata.length;i++){
+                myLatLngLiteral = new google.maps.LatLng(latC[i],lonC[i]);
+                    
+                    lati = Number(latC[i]);
+                    lngi = Number(lonC[i]);
+                    r = Math.pow((lati - centerlat),2) + Math.pow((lngi - centerlng),2);
+                    radioi = Math.sqrt(r);
+                    if (radioi<radiob){
+
+                        markerp = new google.maps.Marker({
+                            position: myLatLngLiteral,
+                            title: dateC[i]+' at '+timeC[i],
+                            icon: {
+                            url: "images/initoff.png",
+                            scaledSize: new google.maps.Size(60/3, 70/3)
+                        }
+                        });
+                        markerp.setMap(map); 
+                        markersArray.push(markerp);
+
+                        //        google.maps.event.addListener(markerp,'click',function(event){
+                         //       alert("nel"+m);
+                        //        });  
+                    }
+                }
+            }
         }
 	}); 
 

@@ -15,6 +15,8 @@ function loadjs(){
     
 }
 
+
+
 function initmap(){
     
      
@@ -22,14 +24,18 @@ function initmap(){
          //scrollwheel: false,
          //draggable: false,
          //disableDefaultUI: true,
-         mapTypeControl: false,
+         mapTypeControl: true,
          scaleControl: true,
          zoomControl: true,
          center: new google.maps.LatLng(+11.01930, -74.85152),
          zoom: 17
+         
+        
      };
 
+
      map = new google.maps.Map(document.getElementById('map'), myOptions);
+  
     flightPlanCoordinates = [];
 
     //flightPath.setMap(null);
@@ -122,7 +128,9 @@ function processreadData(coordinates){
     delete dateC[dateC.length-1];
     delete timeC[timeC.length-1];
 
-    map.setOptions({styles: styles['retro']});
+    map.setOptions({styles: styles['retro'],
+        
+});
 
     var myLatLng = new google.maps.LatLng(latC[Math.round((latC.length - 2) / 2)],lonC[Math.round((lonC.length - 2) / 2)]);
     var myOptions = {
@@ -137,9 +145,9 @@ function processreadData(coordinates){
     };
 
     //Make Polyline
-    flightPlanCoordinates = [{lat:Number(latC[0]),lng:Number(lonC[0])}];
+    flightPlanCoordinates = [{lat:Number(latC[latC.length-2]),lng:Number(lonC[latC.length-2])}];
     for(i=1;i<latC.length-1;i++){
-        flightPlanCoordinates.push({lat:Number(latC[i]),lng:Number(lonC[i])});
+        flightPlanCoordinates.push({lat:Number(latC[(latC.length-2)-i]),lng:Number(lonC[(latC.length-2)-i])});
     }
 
     flightPath.setMap(null);
@@ -154,7 +162,7 @@ function processreadData(coordinates){
     flightPath.setMap(map);
 
     // Locate initial point
-    myinitialpot = new google.maps.LatLng(latC[0],lonC[0]);
+    myinitialpot = new google.maps.LatLng(latC[latC.length-2],lonC[lonC.length-2]);
     markerinit.setMap(null);
     markerinit = new google.maps.Marker({
         position: myinitialpot,
@@ -168,7 +176,7 @@ function processreadData(coordinates){
     markerinit.setMap(map);
 
     //Locate last point
-    myLatLnglast = new google.maps.LatLng(latC[latC.length-2],lonC[lonC.length-2]);
+    myLatLnglast = new google.maps.LatLng(latC[0],lonC[0]);
     marker.setMap(null); 
     marker = new google.maps.Marker({
         position: myLatLnglast,

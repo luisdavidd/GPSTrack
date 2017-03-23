@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">SMT Solutions Mobile</string>
+    <string name="change">CHANGE</string>
+    <string name="wait">WAIT</string>
+    <string name="nothing">STOPPED</string>
+    <string name="Latitude">"%.5f"</string>
+    <string name="Longitude">"%.5f"</string>
+</resources>

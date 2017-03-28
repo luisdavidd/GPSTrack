@@ -11,8 +11,8 @@ var myLatLnglast;
 
 
 function loadjs(){
+     $.post('php/update.php'); 
     init();
-    
 }
 
 

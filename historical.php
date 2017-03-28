@@ -27,7 +27,6 @@
     <div class="mask"></div>
 
     <!---strat-wrap -->
-    <div id="include"></div>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js" ></script>
     <div class="navbar">
         <div class="navbar-inner">
@@ -37,7 +36,7 @@
                     <!-- This is website logo -->
                 </a>
                 <!-- Navigation button, visible on small resolution -->
-                <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse" style="background:#000;color:#fff">
                     <i class="icon-menu"></i>
                 </button>
                 <!-- Main navigation -->

@@ -173,7 +173,7 @@ function init(){
 }
 
 function readData(){  //This function fetches the requested php code and inserts it on the function defined
-    $.post('php/readata.php',function(coordinates){
+    $.post('php/redformaphistoric.php',function(coordinates){
         processreadData(coordinates)
     });
 }

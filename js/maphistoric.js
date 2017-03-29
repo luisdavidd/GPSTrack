@@ -165,6 +165,7 @@ function initmapi(){
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
     flightPlanCoordinates = [];
 
+
     
 }
 
@@ -246,28 +247,6 @@ function processreadData(coordinates){
         flightPlanCoordinates.push({lat:Number(latC[(latC.length-2)-i]),lng:Number(lonC[(latC.length-2)-i])});
     }
 
-    flightPath = new google.maps.Polyline({
-        path: flightPlanCoordinates,
-        geodesic: true,
-        //strokeColor: '#000000',
-        strokeColor: '#FFCF00',
-        strokeOpacity: 2.0,
-        strokeWeight: 5
-    });
-    flightPath.setMap(map);
-
-        //Poly Negra
-    flightBlack = new google.maps.Polyline({
-        path: flightPlanCoordinates,
-        geodesic: true,
-        clickable: false,
-        strokeColor: '#000000',
-       // strokeColor: '#FFCF00',
-        strokeOpacity: 2.0,
-        strokeWeight: 5
-    });
-    flightBlack.setMap(map);
-
     // Locate initial point
     var myinitial = new google.maps.LatLng(latC[latC.length-2],lonC[lonC.length-2]);
     kinitial = latC.length-2;
@@ -294,6 +273,48 @@ function processreadData(coordinates){
     }
     });
     markerf.setMap(map); 
+        //Centrar Polílinea 
+    function zoomToObject(obj){
+    var bounds = new google.maps.LatLngBounds();
+    var points = obj.getPath().getArray();
+    for (var n = 0; n < points.length ; n++){
+            bounds.extend(points[n]);
+        }
+        map.fitBounds(bounds);
+    }
+
+    flightPath = new google.maps.Polyline({
+        path: flightPlanCoordinates,
+        geodesic: true,
+        //strokeColor: '#000000',
+        strokeColor: '#FFCF00',
+        strokeOpacity: 5.0,
+        strokeWeight: 5,
+    });
+
+    flightPath.setMap(map);
+    if(isNaN(latC[0])==false){
+        zoomToObject(flightPath);
+    }
+    //zoomToObject(flightPath);
+
+    //Poly Negra
+    flightBlack = new google.maps.Polyline({
+        path: flightPlanCoordinates,
+        geodesic: true,
+        clickable: false,
+        strokeColor: '#000000',
+       // strokeColor: '#FFCF00',
+        strokeOpacity: 5.0,
+        strokeWeight: 5
+    });
+    flightBlack.setMap(map);
+    if(isNaN(latC[0])==false){
+        zoomToObject(flightBlack);
+    }
+    //zoomToObject(flightBlack);
+
+    
 
     var circle = new google.maps.Circle({
       strokeColor: '#000000',

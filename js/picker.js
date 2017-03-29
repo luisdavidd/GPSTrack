@@ -18,16 +18,16 @@ var calendar_output;
 var markersArray = [];
 var cont = 0;
 sendnrecieve();
-    var circlep = new google.maps.Circle({
-      strokeColor: '#EBC14C',
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: '#EBC14C', //FFCF00
-      fillOpacity: 0.35,
-      radius: 80,
-      visible: true,
-      editable: true,
-    });
+    // var circlep = new google.maps.Circle({
+    //   strokeColor: '#EBC14C',
+    //   strokeOpacity: 0.8,
+    //   strokeWeight: 2,
+    //   fillColor: '#EBC14C', //FFCF00
+    //   fillOpacity: 0.35,
+    //   radius: 80,
+    //   visible: true,
+    //   editable: true,
+    // });
 
 
 
@@ -113,8 +113,14 @@ function remake(param1,param2){
                 flightPlanCoordinates.push({lat:Number(latC[(latC.length-2)-i]),lng:Number(lonC[(latC.length-2)-i])});
             }
 
+            
 		    flightBlack.setPath(flightPlanCoordinates);
-
+            console.log(flightPlanCoordinates)
+            if(flightPlanCoordinates.length<2){
+               flightPath.setVisible(false); 
+            }else{
+                flightPath.setVisible(true);
+            }
 		    // Locate initial point
 		    myinitialpot = new google.maps.LatLng(latC[latC.length-2],lonC[latC.length-2]);
     		markeri.setPosition(myinitialpot);
@@ -125,28 +131,28 @@ function remake(param1,param2){
     		markerf.setPosition(myLatLnglast); 
 
 
-    circlep.setCenter(myLatLnglast);
-    circlep.setMap(map); 
+    // circlep.setCenter(myLatLnglast);
+    // circlep.setMap(map); 
     //////map.panTo(latLng);
 
 
-    google.maps.event.addListener(circlep,"center_changed", function(){
-        if (circlep.getVisible()==true){
-            areaData();
-        }
+    // google.maps.event.addListener(circlep,"center_changed", function(){
+    //     if (circlep.getVisible()==true){
+    //         areaData();
+    //     }
         
-    });
-    google.maps.event.addListener(circlep,"radius_changed", function(){
-        if (circlep.getVisible()==true){
-            areaData();
-        }
-    });
+    // });
+    // google.maps.event.addListener(circlep,"radius_changed", function(){
+    //     if (circlep.getVisible()==true){
+    //         areaData();
+    //     }
+    // });
 
     
    
 
 /////////////////Función ÁREA////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            function areaData(){
+            //function areaData(){
                 // circlep.setMap(map); 
                 // setCenterUI.addEventListener('click', function() {
                 //     console.log("entre aqui a click 2");
@@ -166,43 +172,43 @@ function remake(param1,param2){
                 //     }
                 //     console.log("Mi estado es: "+stateb2)
                 // }); 
-                for (v=0;v<markersArray.length;v++){
-                    markersArray[v].setMap(null);
-                }   
-                var bounds = circlep.getBounds();
-                var centerc = circlep.getCenter();
-                var centerlng = centerc.lng();
-                var centerlat = centerc.lat();
-                var east = bounds.getNorthEast();
-                var radiob = Math.abs(east.lng() - centerlng);
+                // for (v=0;v<markersArray.length;v++){
+                //     markersArray[v].setMap(null);
+                // }   
+                // var bounds = circlep.getBounds();
+                // var centerc = circlep.getCenter();
+                // var centerlng = centerc.lng();
+                // var centerlat = centerc.lat();
+                // var east = bounds.getNorthEast();
+                // var radiob = Math.abs(east.lng() - centerlng);
 
-                //latC.push(coorC[0]);
-                for(i=0;i<entiredata.length;i++){
-                myLatLngLiteral = new google.maps.LatLng(latC[i],lonC[i]);
+                // //latC.push(coorC[0]);
+                // for(i=0;i<entiredata.length;i++){
+                // myLatLngLiteral = new google.maps.LatLng(latC[i],lonC[i]);
                     
-                    lati = Number(latC[i]);
-                    lngi = Number(lonC[i]);
-                    r = Math.pow((lati - centerlat),2) + Math.pow((lngi - centerlng),2);
-                    radioi = Math.sqrt(r);
-                    if (radioi<radiob){
+                //     lati = Number(latC[i]);
+                //     lngi = Number(lonC[i]);
+                //     r = Math.pow((lati - centerlat),2) + Math.pow((lngi - centerlng),2);
+                //     radioi = Math.sqrt(r);
+                //     if (radioi<radiob){
 
-                        markerp = new google.maps.Marker({
-                            position: myLatLngLiteral,
-                            title: dateC[i]+' at '+timeC[i],
-                            icon: {
-                            url: "images/initoff.png",
-                            scaledSize: new google.maps.Size(60/3, 70/3)
-                        }
-                        });
-                        markerp.setMap(map); 
-                        markersArray.push(markerp);
+                //         markerp = new google.maps.Marker({
+                //             position: myLatLngLiteral,
+                //             title: dateC[i]+' at '+timeC[i],
+                //             icon: {
+                //             url: "images/initoff.png",
+                //             scaledSize: new google.maps.Size(60/3, 70/3)
+                //         }
+                //         });
+                //         markerp.setMap(map); 
+                //         markersArray.push(markerp);
 
                         //        google.maps.event.addListener(markerp,'click',function(event){
                          //       alert("nel"+m);
                         //        });  
-                    }
-                }
-            }
+                    //}
+                //}
+            //}
         }
 	}); 
 

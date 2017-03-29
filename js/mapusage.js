@@ -150,6 +150,16 @@ function processreadData(coordinates){
         flightPlanCoordinates.push({lat:Number(latC[(latC.length-2)-i]),lng:Number(lonC[(latC.length-2)-i])});
     }
 
+    //Centrar Polílinea 
+    function zoomToObject(obj){
+    var bounds = new google.maps.LatLngBounds();
+    var points = obj.getPath().getArray();
+    for (var n = 0; n < points.length ; n++){
+            bounds.extend(points[n]);
+        }
+        map.fitBounds(bounds);
+    }
+
     flightPath.setMap(null);
     flightPath = new google.maps.Polyline({
         path: flightPlanCoordinates,
@@ -160,6 +170,11 @@ function processreadData(coordinates){
         strokeWeight: 5
     });
     flightPath.setMap(map);
+    console.log(flightPlanCoordinates)
+    if(isNaN(latC[0])==false){
+        zoomToObject(flightPath);
+    }
+    
 
     // Locate initial point
     myinitialpot = new google.maps.LatLng(latC[latC.length-2],lonC[lonC.length-2]);

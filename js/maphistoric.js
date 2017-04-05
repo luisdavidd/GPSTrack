@@ -412,8 +412,15 @@ if (iore==1){
     hhmmssend = TIMEe.split(":");
     aammddinit = DATEi.split("-");
     hhmmssinit = TIMEi.split(":");
+
+    if(aammddend[1]-aammddinit[1]==0){
+        var days = aammddend[2] - aammddinit[2];
+
+    }else{
+        var days = 31+(aammddend[2]-aammddinit[2]);
+    }
   //  sm = DATEi+" "+TIMEi;
-    var days = aammddend[2] - aammddinit[2];
+    //var days = aammddend[2] - aammddinit[2];
     var hours = hhmmssend[0] - hhmmssinit[0];
     var min = hhmmssend[1] - hhmmssinit[1];
     var secs = hhmmssend[2] - hhmmssinit[2];
@@ -430,6 +437,7 @@ if (iore==1){
         days = days - 1;
         hours = 24 + hours;
     } 
+
     //hours = hours + days*24;
 
   // alert("This travel took "+hours+" hours, "+min+" minutes with "+secs+" seconds ");
@@ -477,7 +485,13 @@ google.maps.event.addListener(markeri,'click',function(){
     aammddinit = DATEi.split("-");
     hhmmssinit = TIMEi.split(":");
   //  sm = DATEi+" "+TIMEi;
-    var days = aammddend[2] - aammddinit[2];
+    if(aammddend[1]-aammddinit[1]==0){
+        var days = aammddend[2] - aammddinit[2];
+
+    }else{
+        var days = 31+(aammddend[2]-aammddinit[2]);
+    }
+    //var days = aammddend[2] - aammddinit[2];
     var hours = hhmmssend[0] - hhmmssinit[0];
     var min = hhmmssend[1] - hhmmssinit[1];
     var secs = hhmmssend[2] - hhmmssinit[2];
@@ -494,6 +508,8 @@ google.maps.event.addListener(markeri,'click',function(){
         days = days - 1;
         hours = 24 + hours;
     } 
+
+
     //hours = hours + days*24;
 
     popup = new google.maps.InfoWindow({

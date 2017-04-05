@@ -54,16 +54,16 @@
                         
                             <!-- mask elemet use for masking background image -->
                             <br>
-
+                            <h2 style="text-align:center;color:#fff;font-weight:bold">Date-Time Search</h2>
                             <div class="container">
                                 <input type="text" name="daterange" id = "date" value="0" style="width:300px;display: block;margin:auto;background-color: white"/>
                             </div>                
-                            <br><br>   
+                            <br>   
                             
                             <div id="map" style="width:75%;height:75%; display: block;margin: auto;"></div>
                             
                             
-                            <br><br>   
+                            <br>
                </div>
 
             <!---End-about-->
@@ -127,9 +127,11 @@
                 locale: {
                     format: 'YYYY-MM-DD H:mm:ss'
                 },
+
                 ranges: {
-                   'Today': [moment(), moment()],
-                   'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days'),moment().startOf('date'),moment().endOf('date')],
+
+                   'Today': [moment().startOf('days'), moment()],
+                   'Yesterday': [moment().subtract(1, 'days').startOf('days'), moment().subtract(1, 'days').endOf('days'),moment().startOf('date'),moment().endOf('date')],
                    'Last 7 Days': [moment().subtract(6, 'days'), moment(),moment().startOf('date'),moment().endOf('date')],
                    'Last 30 Days': [moment().subtract(29, 'days'), moment().startOf('hour'),moment().endOf('hour')],
                    'This Month': [moment().startOf('month'), moment().endOf('month'),moment().startOf('hour'),moment().endOf('hour')],

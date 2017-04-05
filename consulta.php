@@ -39,7 +39,8 @@
                 <div class="about-header">
                         <div class="triangle"></div>
                             <!-- mask elemet use for masking background image -->
-                            <br><br>
+                            <br>
+                            <h2 style="text-align:center;font-weight:bold">Real Time Tracking</h2>
                             <div id="map" style="width:75%;height:75%; display: block;margin: auto;"></div>
                             <br><br><br>
 

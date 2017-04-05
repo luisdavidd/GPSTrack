@@ -38,6 +38,7 @@ html {
     color: white;
     background-image: url("slider2.png");
     background-size:cover;
+    height:100%;
 }
 body {
     font-family:'Roboto', sans-serif;
@@ -45,6 +46,7 @@ body {
     line-height:1.2em;
     font-size:17px;
     line-height:20px;
+    height:100%;
 }
 a {
     color:#181A1C;
@@ -752,7 +754,7 @@ div.transbox p {
     margin:0;
   }
  .footer {
-    /*position: absolute;*/
+    position: fixed;
     align-self:flex-end;
     right: 0;
     bottom: 0;

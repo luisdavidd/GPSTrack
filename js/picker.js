@@ -4,6 +4,7 @@
 var map;
 var flightPlanCoordinates;
 var flightBlack;
+var flightPath;
 var markeri;
 var markerf;
 var myinitialpot;
@@ -18,16 +19,16 @@ var calendar_output;
 var markersArray = [];
 var cont = 0;
 sendnrecieve();
-    // var circlep = new google.maps.Circle({
-    //   strokeColor: '#EBC14C',
-    //   strokeOpacity: 0.8,
-    //   strokeWeight: 2,
-    //   fillColor: '#EBC14C', //FFCF00
-    //   fillOpacity: 0.35,
-    //   radius: 80,
-    //   visible: true,
-    //   editable: true,
-    // });
+// var circlep = new google.maps.Circle({
+//   strokeColor: '#EBC14C',
+//   strokeOpacity: 0.8,
+//   strokeWeight: 2,
+//   fillColor: '#EBC14C', //FFCF00
+//   fillOpacity: 0.35,
+//   radius: 80,
+//   visible: true,
+//   editable: true,
+// });
 
 
 
@@ -64,7 +65,6 @@ function sendnrecieve(){
 			}
 
 	},1000);
-
 
 }
 
@@ -113,7 +113,7 @@ function remake(param1,param2){
                 flightPlanCoordinates.push({lat:Number(latC[(latC.length-2)-i]),lng:Number(lonC[(latC.length-2)-i])});
             }
 
-            
+            flightPath.setPath(flightPlanCoordinates);
 		    flightBlack.setPath(flightPlanCoordinates);
             console.log(flightPlanCoordinates)
             if(flightPlanCoordinates.length<2){

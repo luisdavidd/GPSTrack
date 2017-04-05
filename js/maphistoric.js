@@ -12,7 +12,9 @@ var myLatLnglast;
 var circlep;
 var stateb1=0;
 var stateb2=1;
-
+var popup;
+var goCenterUI;
+var goCenterText;
 function loadjs(){
     init();
 }
@@ -26,7 +28,7 @@ function CenterControl(controlDiv, map, center) {
     controlDiv.style.clear = 'both';
 
     // Set CSS for the control border
-    var goCenterUI = document.createElement('div');
+    goCenterUI = document.createElement('div');
     goCenterUI.id = 'goCenterUI';
     goCenterUI.title = 'Click to recenter the map';
     goCenterUI.style.backgroundColor = '#fff';
@@ -40,7 +42,7 @@ function CenterControl(controlDiv, map, center) {
     controlDiv.appendChild(goCenterUI);
 
     // Set CSS for the control interior
-    var goCenterText = document.createElement('div');
+    goCenterText = document.createElement('div');
     goCenterText.id = 'goCenterText';
     goCenterText.style.color = 'rgb(25,25,25)';
     goCenterText.style.fontFamily = 'Roboto,Arial,sans-serif';
@@ -157,6 +159,7 @@ function initmapi(){
      };
 
     map = new google.maps.Map(document.getElementById('map'), myOptions);
+   
     var centerControlDiv = document.createElement('div');
     var centerControl = new CenterControl(centerControlDiv, map);
 
@@ -164,6 +167,10 @@ function initmapi(){
 
     map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
     flightPlanCoordinates = [];
+    // google.maps.event.addDomListener(window, 'load', initmapi);
+    // google.maps.event.addDomListener(window, "resize", function() {
+    //  google.maps.event.trigger(map, "resize");
+    // });
 
 
     
@@ -273,7 +280,7 @@ function processreadData(coordinates){
     }
     });
     markerf.setMap(map); 
-        //Centrar Polílinea 
+    //Centrar Polílinea 
     function zoomToObject(obj){
     var bounds = new google.maps.LatLngBounds();
     var points = obj.getPath().getArray();
@@ -286,9 +293,9 @@ function processreadData(coordinates){
     flightPath = new google.maps.Polyline({
         path: flightPlanCoordinates,
         geodesic: true,
-        //strokeColor: '#000000',
         strokeColor: '#FFCF00',
-        strokeOpacity: 5.0,
+        //strokeColor: '#FFFFFF',
+        strokeOpacity: 0.8,
         strokeWeight: 5,
     });
 
@@ -304,8 +311,8 @@ function processreadData(coordinates){
         geodesic: true,
         clickable: false,
         strokeColor: '#000000',
-       // strokeColor: '#FFCF00',
-        strokeOpacity: 5.0,
+        //strokeColor: '#FFCF00',
+        //strokeOpacity: 5.0,
         strokeWeight: 5
     });
     flightBlack.setMap(map);
@@ -385,20 +392,119 @@ function areaData(){
  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  /////////////////////////////////////////////////SWITCHEAR ICONOS INI & FIN////////////////////////////////////////////////////////////
 google.maps.event.addListener(markerf,'click',function(event){
-//popup.setContent('<p>tienda2</p>');
+if (iore==1){
+
+    var myinitial = markeri.getPosition();
+    var meh = "+"+myinitial.lat();
+    //var nel = latC[latC.length-2];
+    var kinitial = latC.indexOf(meh.toString());
+
+    var  mylast = markerf.getPosition();
+    var meh = "+"+mylast.lat();
+    //      var nel = latC[0];
+    var kend = latC.indexOf(meh.toString()); 
+
+    DATEi = dateC[kinitial];
+    TIMEi = timeC[kinitial];
+    DATEe = dateC[kend];
+    TIMEe = timeC[kend];
+    aammddend = DATEe.split("-");
+    hhmmssend = TIMEe.split(":");
+    aammddinit = DATEi.split("-");
+    hhmmssinit = TIMEi.split(":");
+  //  sm = DATEi+" "+TIMEi;
+    var days = aammddend[2] - aammddinit[2];
+    var hours = hhmmssend[0] - hhmmssinit[0];
+    var min = hhmmssend[1] - hhmmssinit[1];
+    var secs = hhmmssend[2] - hhmmssinit[2];
+    if (secs<0){
+        min = min - 1;
+        secs = 60 + secs;
+    }
+    if (min<0){
+        hours = hours - 1;
+        min = 60 + min;
+    }
+    
+    if (hours<0){
+        days = days - 1;
+        hours = 24 + hours;
+    } 
+    //hours = hours + days*24;
+
+  // alert("This travel took "+hours+" hours, "+min+" minutes with "+secs+" seconds ");
+    popup = new google.maps.InfoWindow({
+    content: '<div id="content">'+
+      '<p><b>Trip info </b></p>'+
+      '<p>This travel took '+days.toString()+' days with '+hours.toString()+' hours, '+min.toString()+' minutes with '+secs.toString()+' seconds. </p>'+
+      '<p><b>This point: </b> '+DATEe.toString()+' at '+TIMEe.toString()+'. </p>'+
+      '</div>'
+    });
+    popup.open(map, markerf);
+}
 iore = 1;
 
     markeri.setIcon({
         url: "images/initoff.png",
-        scaledSize: new google.maps.Size(60*2/3, 78*2/3)
+        scaledSize: new google.maps.Size(60*2/3, 70*2/3)
     });
     markerf.setIcon({
         url: "images/truck.png",
-        scaledSize: new google.maps.Size(60, 78)
+        scaledSize: new google.maps.Size(60, 70)
     });
 }); 
 
 google.maps.event.addListener(markeri,'click',function(){
+
+    if (iore==0){
+          //  popup.close();
+    var myinitial = markeri.getPosition();
+    var meh = "+"+myinitial.lat();
+    //var nel = latC[latC.length-2];
+    var kinitial = latC.indexOf(meh.toString());
+
+    var  mylast = markerf.getPosition();
+    var meh = "+"+mylast.lat();
+    //      var nel = latC[0];
+    var kend = latC.indexOf(meh.toString()); 
+
+    DATEi = dateC[kinitial];
+    TIMEi = timeC[kinitial];
+    DATEe = dateC[kend];
+    TIMEe = timeC[kend];
+    aammddend = DATEe.split("-");
+    hhmmssend = TIMEe.split(":");
+    aammddinit = DATEi.split("-");
+    hhmmssinit = TIMEi.split(":");
+  //  sm = DATEi+" "+TIMEi;
+    var days = aammddend[2] - aammddinit[2];
+    var hours = hhmmssend[0] - hhmmssinit[0];
+    var min = hhmmssend[1] - hhmmssinit[1];
+    var secs = hhmmssend[2] - hhmmssinit[2];
+    if (secs<0){
+        min = min - 1;
+        secs = 60 + secs;
+    }
+    if (min<0){
+        hours = hours - 1;
+        min = 60 + min;
+    }
+    
+    if (hours<0){
+        days = days - 1;
+        hours = 24 + hours;
+    } 
+    //hours = hours + days*24;
+
+    popup = new google.maps.InfoWindow({
+    content: '<div id="content">'+
+      '<p><b>Trip info </b></p>'+
+      '<p>This travel took '+days.toString()+' days with '+hours.toString()+' hours, '+min.toString()+' minutes with '+secs.toString()+' seconds. </p>'+
+      '<p><b>This point: </b> '+DATEi.toString()+' at '+TIMEi.toString()+'. </p>'+
+      '</div>'
+    });
+    popup.open(map, markeri);
+    }
 
 iore = 0;
 
@@ -410,7 +516,7 @@ iore = 0;
     markeri.setIcon({
         url: "images/init.png",
         scaledSize: new google.maps.Size(60, 78)
-    });
+    }); 
         
 }); 
 
@@ -445,35 +551,34 @@ iore = 0;
             k=i;
         }
 
-        if (i>0){
-            yi = Number(latC[i-1]);
-            yf = Number(latC[i]);
-            xi = Number(lonC[i-1]);
-            xf = Number(lonC[i]);
-            m = (yf-yi)/(xf-xi);
-            b = yf - (m*xf);
+        // if (i>0){
+        //     yi = Number(latC[i-1]);
+        //     yf = Number(latC[i]);
+        //     xi = Number(lonC[i-1]);
+        //     xf = Number(lonC[i]);
+        //     m = (yf-yi)/(xf-xi);
+        //     b = yf - (m*xf);
 
-            y = m*LON + b;
-            ertotal = Math.abs(y-LAT);
-            er1 = Math.abs(Number(latC[i-1])-LAT) + Math.abs(Number(lonC[i-1])-LON);
-            er2 = Math.abs(Number(latC[i])-LAT) + Math.abs(Number(lonC[i])-LON);
+        //     y = m*LON + b;
+        //     ertotal = Math.abs(y-LAT);
+        //     er1 = Math.abs(Number(latC[i-1])-LAT) + Math.abs(Number(lonC[i-1])-LON);
+        //     er2 = Math.abs(Number(latC[i])-LAT) + Math.abs(Number(lonC[i])-LON);
 
 
-        if (ertotal<ermin){
-            ermin = ertotal;
-            if (er1<er2){
-                k = i-1;
-            DATE = dateC[i-1];
-            TIME = timeC[i-1];
+        //     if (ertotal<ermin){
+        //         ermin = ertotal;
+        //         if (er1<er2){
+        //             k = i-1;
+        //         DATE = dateC[i-1];
+        //         TIME = timeC[i-1];
 
-            }else{
-                k=i;
-            DATE = dateC[i];
-            TIME = timeC[i];
-            }
-        }
-
-        }
+        //         }else{
+        //             k=i;
+        //         DATE = dateC[i];
+        //         TIME = timeC[i];
+        //         }
+        //     }
+        // }
 
     } 
 
@@ -538,7 +643,7 @@ iore = 0;
 }
 
 }
-
+    popup.close();
     });
 
     flightPath.setMap(map);
@@ -546,34 +651,7 @@ iore = 0;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 google.maps.event.addListener(map,'click',function(){
 
-    var days = aammddend[2] - aammddinit[2];
-    var hours = hhmmssend[0] - hhmmssinit[0];
-    var min = hhmmssend[1] - hhmmssinit[1];
-    var secs = hhmmssend[2] - hhmmssinit[2];
-    if (secs<0){
-        min = min - 1;
-        secs = 60 - secs;
-    }
-    if (min<0){
-        hours = hours - 1;
-        min = 60 - min;
-    }
-    /*
-    if (hours<0){
-        days = days - 1;
-        hours = 24 - hours;
-    } */
-    hours = hours + days*24;
-
-  // alert("This travel took "+hours+" hours, "+min+" minutes with "+secs+" seconds ");
-       var popup = new google.maps.InfoWindow({
-    content: '<div id="content">'+
-      '<p><b>Trip info </b></p>'+
-      '<p>This travel took '+hours+' hours, '+min+' minutes with '+secs+' seconds. </p>'+
-      
-      '</div>'
-});
-    popup.open(map, markeri);
+    popup.close();
     
 });
  //AQUI ESTA EL LISTENER DEL BOTON 1

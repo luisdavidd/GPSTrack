@@ -18,7 +18,7 @@
     <link rel="stylesheet" type="text/css" href="css/styles.css?n=1" />
     <!-- <link rel="stylesheet" media="all" type="text/css" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
     <link rel="stylesheet" media="all" type="text/css" href="css/jquery-ui-timepicker-addon.css" /> -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css?n=1" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css?n=1" rel="stylesheet"> 
     <link rel="stylesheet" type="text/css" href="css/daterangepicker.css?n=1" />
   
 
@@ -27,32 +27,15 @@
     <div class="mask"></div>
 
     <!---strat-wrap -->
+    <div id="included"></div>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js?n=1" ></script>
-    <div class="navbar">
-        <div class="navbar-inner">
-            <div class="container">
-                <a href="#" class="brand">
-                    <img src="images/logo3.png" width="800" height="774" alt="Logo" />
-                    <!-- This is website logo -->
-                </a>
-                <!-- Navigation button, visible on small resolution -->
-                <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse" style="background:#000;color:#fff">
-                    <i class="icon-menu"></i>
-                </button>
-                <!-- Main navigation -->
-                <div class="nav-collapse collapse pull-right">
-                    <ul class="nav" id="top-navigation">
-                        <li class="active"><a href="index.html">Home</a></li>
-                        <li><a href="consulta.php">Live Track</a></li>
-                        <li><a href="historical.php">Historical</a></li>
-                        <li><a href="index.html#about">About</a></li>
-                        <li><a href="index.html#contact">Contact</a></li>
-                    </ul>
-                </div>
-                <!-- End main navigation -->
-            </div>
-        </div>
-    </div>
+    <script src="js/jquery.js"></script> 
+    <script> 
+        $(function(){
+          $("#included").load("header.html"); 
+        });
+    </script> 
+    
 
     <script src="js/maphistoric.js?n=1"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCus7HdIsJX7I3Ny01zAZWVmwr6sy_Vky4&callback=initmapi" async defer></script>
@@ -80,23 +63,24 @@
                             <div id="map" style="width:75%;height:75%; display: block;margin: auto;"></div>
                             
                             
-                            <br><br><br>    
+                            <br><br>   
                </div>
 
             <!---End-about-->
          </div>
         <!---End-about-us-->
         
-        <div class="footer">
-            <p style="font-size:20px">&copy; SMT Solutions - 2017 Copyright</p>
-        </div>
-        <!-- Footer section end -->
-        <!-- ScrollUp button start -->
-        <div class="scrollup">
-            <a href="#">
-                <i class="icon-up-open"></i>
-            </a>
-        </div>
+       
+    </div>
+     <div class="footer">
+        <p style="font-size:20px">&copy; SMT Solutions - 2017 Copyright</p>
+    </div>
+    <!-- Footer section end -->
+    <!-- ScrollUp button start -->
+    <div class="scrollup">
+        <a href="#">
+            <i class="icon-up-open"></i>
+        </a>
     </div>
     <script src="js/jquery.js"></script>
     <script type="text/javascript" src="js/jquery.mixitup.js?n=1"></script>
@@ -163,16 +147,7 @@
 
             
         });
-       
-
-        
     </script>
-   <!--  <script>
-        $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
-           console.log(picker.startDate.format('YYYY-MM-DD H:mm:ss'));
-           console.log(picker.endDate.format('YYYY-MM-DD H:mm:ss'));
-        });        
-    </script> -->
     <script type="text/javascript" src="js/picker.js?n=1"></script> 
 </body>
 

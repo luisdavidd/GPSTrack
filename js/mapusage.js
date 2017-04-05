@@ -20,21 +20,23 @@ function loadjs(){
 function initmap(){
     
      
-     var myOptions = {
-         //scrollwheel: false,
-         //draggable: false,
-         //disableDefaultUI: true,
-         mapTypeControl: true,
-         scaleControl: true,
-         zoomControl: true,
-         center: new google.maps.LatLng(+11.01930, -74.85152),
-         zoom: 17
-         
-        
-     };
+    var myOptions = {
+        //scrollwheel: false,
+        //draggable: false,
+        //disableDefaultUI: true,
+        mapTypeControl: true,
+        scaleControl: true,
+        zoomControl: true,
+        center: new google.maps.LatLng(+11.01930, -74.85152),
+        zoom: 17
+    };
 
 
-     map = new google.maps.Map(document.getElementById('map'), myOptions);
+    map = new google.maps.Map(document.getElementById('map'), myOptions);
+    // google.maps.event.addDomListener(window, 'load', initmap);
+    // google.maps.event.addDomListener(window, "resize", function() {
+    //  google.maps.event.trigger(map, "resize");
+    // });
   
     flightPlanCoordinates = [];
 
@@ -170,7 +172,7 @@ function processreadData(coordinates){
         strokeWeight: 5
     });
     flightPath.setMap(map);
-    console.log(flightPlanCoordinates)
+    
     if(isNaN(latC[0])==false){
         zoomToObject(flightPath);
     }

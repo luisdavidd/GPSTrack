@@ -17,6 +17,7 @@
     <link rel="shortcut icon" href="images/ico/favicon.ico">
     <link rel="stylesheet" type="text/css" href="css/styles.css?n=1" />
 
+
 </head>
 <body class="master">
     <div class="mask"></div>
@@ -38,23 +39,26 @@
                 <div class="about-header">
                         <div class="triangle"></div>
                             <!-- mask elemet use for masking background image -->
-                            <br>
-                            <div id="map" style="width:75%;height:75%; display: block;margin: auto;"></div>   
+                            <br><br>
+                            <div id="map" style="width:75%;height:75%; display: block;margin: auto;"></div>
+                            <br><br><br>
+
                </div>
                 
             <!---End-about---->
          </div>
         <!---End-about-us-->
-        <div class="footer">
-            <p>&copy; SMT Solutions - 2017 Copyright</p>
-        </div>
-        <!-- Footer section end -->
-        <!-- ScrollUp button start -->
-        <div class="scrollup">
-            <a href="#">
-                <i class="icon-up-open"></i>
-            </a>
-        </div>
+        
+    </div>
+    <div class="footer">
+        <p style="font-size:20px;">&copy; SMT Solutions - 2017 Copyright</p>
+    </div>
+    <!-- Footer section end -->
+    <!-- ScrollUp button start -->
+    <div class="scrollup">
+        <a href="#">
+            <i class="icon-up-open"></i>
+        </a>
     </div>
     <script src="js/jquery.js"></script>
     <script type="text/javascript" src="js/jquery.mixitup.js?n=1"></script>

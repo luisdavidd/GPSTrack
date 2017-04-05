@@ -752,7 +752,8 @@ div.transbox p {
     margin:0;
   }
  .footer {
-    position: absolute;
+    /*position: absolute;*/
+    align-self:flex-end;
     right: 0;
     bottom: 0;
     left: 0;
@@ -782,7 +783,7 @@ div.transbox p {
     position:fixed;
     bottom:30px;
     right:20px;
-	border:1px solid #fff;
+    border:1px solid #fff;
     display:none;
     background: #FECE1A;
 }

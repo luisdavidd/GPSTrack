@@ -18,18 +18,11 @@ var newend;
 var calendar_output;
 var markersArray = [];
 var cont = 0;
+var globyx;
+var p3;
+var urltosend;
+var ct;
 sendnrecieve();
-// var circlep = new google.maps.Circle({
-//   strokeColor: '#EBC14C',
-//   strokeOpacity: 0.8,
-//   strokeWeight: 2,
-//   fillColor: '#EBC14C', //FFCF00
-//   fillOpacity: 0.35,
-//   radius: 80,
-//   visible: true,
-//   editable: true,
-// });
-
 
 
 function initp()
@@ -51,26 +44,46 @@ function sendnrecieve(){
 	results = initp();
 	tempini = results[0];
 	tempend = results[1];
+    ct = 0;
 	setInterval(function(){
+            if(globyx==="truck1"){
+                p3=1;
+            }else if(globyx=="truck2"){
+                p3=2; 
+            }else if(globyx=="bothtrucks"){
+                p3=3;
+            }else{
+                p3=3; 
+            }
 			results = initp();
 			newini = results[0];
 			newend = results[1];
-			if(newini!= tempini || newend!= tempend){
+			if(newini!= tempini || newend!= tempend || ct!=globyx){
 				if(newini != tempini){
 					tempini = newini;
-				}else{
+				}else if(newend!= tempend){
 					tempend = newend;
-				}
-				remake(newini,newend);
+				}else if(ct!=globyx){
+                    console.log("Cambie puta madre")
+                    ct= globyx;
+                }
+				remake(newini,newend,p3);
 			}
 
 	},1000);
 
 }
 
-function remake(param1,param2){
+function remake(param1,param2,param3){
+    if(param3==1){
+        urltosend = 'php/readdatesc1.php'
+    }else if(param3==2){
+        urltosend = 'php/readdatesc2.php'
+    }else{
+        urltosend = 'php/readdates.php'
+    }
 	$.ajax({
-        url: 'php/readdates.php', //This is the current doc
+        url: urltosend, //This is the current doc
      	type: "POST",
      	data: ({init: param1,end:param2}),
 
@@ -129,86 +142,6 @@ function remake(param1,param2){
 		    myLatLnglast = new google.maps.LatLng(latC[0],lonC[0]) ;
     
     		markerf.setPosition(myLatLnglast); 
-
-
-    // circlep.setCenter(myLatLnglast);
-    // circlep.setMap(map); 
-    //////map.panTo(latLng);
-
-
-    // google.maps.event.addListener(circlep,"center_changed", function(){
-    //     if (circlep.getVisible()==true){
-    //         areaData();
-    //     }
-        
-    // });
-    // google.maps.event.addListener(circlep,"radius_changed", function(){
-    //     if (circlep.getVisible()==true){
-    //         areaData();
-    //     }
-    // });
-
-    
-   
-
-/////////////////Función ÁREA////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            //function areaData(){
-                // circlep.setMap(map); 
-                // setCenterUI.addEventListener('click', function() {
-                //     console.log("entre aqui a click 2");
-                //     // var newCenter = map.getCenter();
-                //     // control.setCenter(newCenter);
-                //     if(stateb2==0){
-                //     console.log("ya me presionaron")
-                //     stateb2=1;
-                //     circlep.setVisible(true);
-                //     }else{
-                //     console.log("ya no")
-                //     stateb2=0;
-                //     circlep.setVisible(false);
-                //     for (v=0;v<markersArray.length;v++){
-                //         markersArray[v].setMap(null);
-                //     } 
-                //     }
-                //     console.log("Mi estado es: "+stateb2)
-                // }); 
-                // for (v=0;v<markersArray.length;v++){
-                //     markersArray[v].setMap(null);
-                // }   
-                // var bounds = circlep.getBounds();
-                // var centerc = circlep.getCenter();
-                // var centerlng = centerc.lng();
-                // var centerlat = centerc.lat();
-                // var east = bounds.getNorthEast();
-                // var radiob = Math.abs(east.lng() - centerlng);
-
-                // //latC.push(coorC[0]);
-                // for(i=0;i<entiredata.length;i++){
-                // myLatLngLiteral = new google.maps.LatLng(latC[i],lonC[i]);
-                    
-                //     lati = Number(latC[i]);
-                //     lngi = Number(lonC[i]);
-                //     r = Math.pow((lati - centerlat),2) + Math.pow((lngi - centerlng),2);
-                //     radioi = Math.sqrt(r);
-                //     if (radioi<radiob){
-
-                //         markerp = new google.maps.Marker({
-                //             position: myLatLngLiteral,
-                //             title: dateC[i]+' at '+timeC[i],
-                //             icon: {
-                //             url: "images/initoff.png",
-                //             scaledSize: new google.maps.Size(60/3, 70/3)
-                //         }
-                //         });
-                //         markerp.setMap(map); 
-                //         markersArray.push(markerp);
-
-                        //        google.maps.event.addListener(markerp,'click',function(event){
-                         //       alert("nel"+m);
-                        //        });  
-                    //}
-                //}
-            //}
         }
 	}); 
 

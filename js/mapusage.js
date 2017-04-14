@@ -1,5 +1,4 @@
 $(window).load(loadjs());   //Wait the page to be fully loaded (Inner frames, images, etc)
-// var flightPath;
 
 var map;
 var flightPlanCoordinates;
@@ -21,9 +20,6 @@ function initmap(){
     
      
     var myOptions = {
-        //scrollwheel: false,
-        //draggable: false,
-        //disableDefaultUI: true,
         mapTypeControl: true,
         scaleControl: true,
         zoomControl: true,
@@ -138,7 +134,6 @@ function processreadData(coordinates){
     var myOptions = {
         scrollwheel: true,
         draggable: true,
-        //disableDefaultUI: true,
         mapTypeControl: false,
         scaleControl: true,
         zoomControl: true,

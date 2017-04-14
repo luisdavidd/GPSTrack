@@ -147,10 +147,11 @@ div.transbox p {
     transition: border-color 1s ease;
 }
 .navbar .nav > li:hover> a, .navbar .nav > .active > a, .navbar .nav > .active > a:hover, .navbar .nav > .active > a:focus {
-    border: 1px solid #FECE1A;
+    border: 2px solid #FECE1A;
     color: #fff;
     background-color: #181A1C;
     transition: border-color 1s ease;
+    border-radius:12px;
 }
 .nav-pills {
     margin-bottom: 30px;

@@ -53,74 +53,6 @@ function CenterControl(controlDiv, map, center) {
     goCenterText.innerHTML = 'When?';
     goCenterUI.appendChild(goCenterText);
 
-    // Set CSS for the setCenter control border
-    // var setCenterUI = document.createElement('div');
-    // setCenterUI.id = 'setCenterUI';
-    // setCenterUI.title = 'Click to change the center of the map';
-    // setCenterUI.style.backgroundColor = '#fff';
-    // setCenterUI.style.border = '2px solid #fff';
-    // setCenterUI.style.borderRadius = '3px';
-    // setCenterUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
-    // setCenterUI.style.cursor = 'pointer';
-    // setCenterUI.style.float = 'left';
-    // setCenterUI.style.marginBottom = '22px';
-    // setCenterUI.style.textAlign = 'center';
-    // controlDiv.appendChild(setCenterUI);
-
-    // Set CSS for the control interior
-    // var setCenterText = document.createElement('div');
-    // setCenterText.id = 'setCenterText';
-    // setCenterText.style.color = 'rgb(25,25,25)';
-    // setCenterText.style.fontFamily = 'Roboto,Arial,sans-serif';
-    // setCenterText.style.fontSize = '16px';
-    // setCenterText.style.lineHeight = '38px';
-    // setCenterText.style.paddingLeft = '5px';
-    // setCenterText.style.paddingRight = '5px';
-    // setCenterText.innerHTML = 'Set Center';
-    // setCenterUI.appendChild(setCenterText);
-
-    // Set up the click event listener for 'Center Map': Set the center of
-    // the map
-    // to the current center of the control.
-
-    //AQUI ESTA EL LISTENER DEL BOTON 1
-    // goCenterUI.addEventListener('click', function() {
-    //   // var currentCenter = control.getCenter();
-    //   // map.setCenter(currentCenter);
-    //   if(stateb1==0){
-    //     stateb1=1;
-    //     circle.setVisible(true);
-    //     areaData();
-    //   }else{
-    //     stateb1=0;
-    //     circle.setVisible(false);
-    //   }
-    //   console.log("Mi estado de Circulo es: ",stateb1);
-    // });
-
-    //AQUI ESTA EL LISTENER DEL BOTON 2
-    // Set up the click event listener for 'Set Center': Set the center of
-    // the control to the current center of the map.
-        
-    // setCenterUI.addEventListener('click', function() {
-    //     // var newCenter = map.getCenter();
-    //     // control.setCenter(newCenter);
-    //     if(stateb2==0){
-    //         circlep.setVisible(true);
-            
-    //         areaData();
-    //         stateb2=1;
-            
-    //     }else{
-            
-    //         circlep.setVisible(false);
-    //         for (v=0;v<markersArray.length;v++){
-    //             markersArray[v].setMap(null);
-    //         } 
-    //         stateb2=0;
-
-    //     }
-    // }); 
   }
 
   /**
@@ -303,7 +235,7 @@ function processreadData(coordinates){
     if(isNaN(latC[0])==false){
         zoomToObject(flightPath);
     }
-    //zoomToObject(flightPath);
+
 
     //Poly Negra
     flightBlack = new google.maps.Polyline({
@@ -311,15 +243,13 @@ function processreadData(coordinates){
         geodesic: true,
         clickable: false,
         strokeColor: '#000000',
-        //strokeColor: '#FFCF00',
-        //strokeOpacity: 5.0,
         strokeWeight: 5
     });
     flightBlack.setMap(map);
     if(isNaN(latC[0])==false){
         zoomToObject(flightBlack);
     }
-    //zoomToObject(flightBlack);
+
 
     
 
@@ -347,11 +277,9 @@ function processreadData(coordinates){
         }
     });
 
-    //////map.panTo(latLng);
 
 /////////////////Función ÁREA////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function areaData(){
-    // circle.setMap(map);   
     for (v=0;v<markersArray.length;v++){
         markersArray[v].setMap(null);
     }   
@@ -362,7 +290,6 @@ function areaData(){
     var east = bounds.getNorthEast();
     var radiob = Math.abs(east.lng() - centerlng);
 
-    //latC.push(coorC[0]);
     for(i=0;i<entiredata.length;i++){
     myLatLngLiteral = new google.maps.LatLng(latC[i],lonC[i]);
         
@@ -383,9 +310,6 @@ function areaData(){
             markerp.setMap(map); 
             markersArray.push(markerp);
 
-            //        google.maps.event.addListener(markerp,'click',function(event){
-             //       alert("nel"+m);
-            //        });  
         }
     }
 }
@@ -438,7 +362,6 @@ if (iore==1){
         hours = 24 + hours;
     } 
 
-    //hours = hours + days*24;
 
   // alert("This travel took "+hours+" hours, "+min+" minutes with "+secs+" seconds ");
     popup = new google.maps.InfoWindow({
@@ -567,35 +490,6 @@ iore = 0;
             k=i;
         }
 
-        // if (i>0){
-        //     yi = Number(latC[i-1]);
-        //     yf = Number(latC[i]);
-        //     xi = Number(lonC[i-1]);
-        //     xf = Number(lonC[i]);
-        //     m = (yf-yi)/(xf-xi);
-        //     b = yf - (m*xf);
-
-        //     y = m*LON + b;
-        //     ertotal = Math.abs(y-LAT);
-        //     er1 = Math.abs(Number(latC[i-1])-LAT) + Math.abs(Number(lonC[i-1])-LON);
-        //     er2 = Math.abs(Number(latC[i])-LAT) + Math.abs(Number(lonC[i])-LON);
-
-
-        //     if (ertotal<ermin){
-        //         ermin = ertotal;
-        //         if (er1<er2){
-        //             k = i-1;
-        //         DATE = dateC[i-1];
-        //         TIME = timeC[i-1];
-
-        //         }else{
-        //             k=i;
-        //         DATE = dateC[i];
-        //         TIME = timeC[i];
-        //         }
-        //     }
-        // }
-
     } 
 
     if (iore==0){ // kend siempre debe ser menor a kinitial
@@ -620,10 +514,7 @@ iore = 0;
 
     aammddinit = DATE.split("-");
     hhmmssinit = TIME.split(":");
-    //alert(kendM);
 
-    //alert(DATE + ", at " + TIME);
-    //2017-03-08, at 15:57:37
 }else{
     alert("ERROR: Endpoint cannot be before Start.");
 }

@@ -19,6 +19,74 @@
 
 
 </head>
+<style type="text/css">
+    * {
+        box-sizing: border-box;
+    }
+    .col1{
+        width: 25%;
+        float: left;
+        padding: 15px;   
+    }
+    .col2{
+        width: 70%;
+        float: left;
+        padding-left: 15px; 
+        padding-top:30px;   
+    }
+    .minicol1{
+        width: 50%;
+        float: left;  
+    }
+    .minicol2{
+        width: 50%;
+        float: left;
+        padding-left: 0px; 
+        height:150px;
+    }
+    label > input{ /* HIDE RADIO */
+      visibility: hidden; /* Makes input not-clickable */
+      position: absolute; /* Remove input from document flow */
+    }
+    label > input + img{ /* IMAGE STYLES */
+      cursor:pointer;
+      border:2px solid transparent;
+    }
+    label > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
+      border:2px solid #f89406;
+      border-radius:25px;
+    }
+    div.boxi{
+        width:20%;
+        float:left;
+        padding:25px;
+        background-color:#000;
+        border: 1px solid black;
+        opacity:0.9;
+        height:65%;
+        margin-top:30px;
+        margin-left:50px;
+    }
+    img.truck{
+        width:150px;
+        height:150px;
+        padding-top:10px;
+        padding-left:10px;
+        padding-right:10px;
+        padding-bottom:10px;
+    }
+</style>
+<script type="text/javascript">
+    var cValue = 0;
+    var globyxlive;
+    function handleClick(Rlive) {
+        //console.log('Old value: ' + cValue);
+        //console.log('New value: ' + Rlive.value);
+        cValue = Rlive.value;
+        globyxlive = Rlive.value;
+
+    }
+</script>
 <body class="master">
     <div class="mask"></div>
     <!---strat-wrap -->
@@ -41,8 +109,63 @@
                             <!-- mask elemet use for masking background image -->
                             <br>
                             <h2 style="text-align:center;font-weight:bold">Real Time Tracking</h2>
-                            <div id="map" style="width:75%;height:75%; display: block;margin: auto;"></div>
-                            <br><br><br>
+                            <div class="boxi" style="border-radius: 25px;">
+                                <h2 style="text-align:center;color:#fece1a;font-weight:bold">Select Truck</h2>
+                                <form>
+                                <div style="height:150px">
+                                    <div class="minicol1">
+                                      <label>
+                                        <input type="radio" name="trucks" value="truck1" onclick="handleClick(this);"/>
+                                        <img src="http://pngimg.com/uploads/truck/truck_PNG16264.png" class="truck bootstrap-responsive">
+                                      </label>
+                                    </div>
+                                    <div class="minicol2">
+                                        <div style="padding-top:10px;padding-left:0px">
+                                            <h3 style="color:#fff;">Truck 1</h3>
+                                            <p style="color:#fff;padding-top:0px;margin-bottom:0px;font-size:18px">Plates: RXB-174 </p>
+                                            <p style="color:#fff;padding-top:0px;margin-bottom:0px;font-size:18px">Driver: 7274 </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="height:150px">
+                                    <br>
+                                    <div class="minicol1">
+                                      <label>
+                                        <input type="radio" name="trucks" value="truck2" onclick="handleClick(this);"/>
+                                        <img src="http://www.pngall.com/wp-content/uploads/2016/09/Cargo-Truck-Free-PNG-Image.png" class="truck bootstrap-responsive">
+                                      </label>
+                                    </div>
+                                    <div class="minicol2">
+                                        <div style="padding-top:10px;padding-left:0px">
+                                        <h3 style="color:#fff;">Truck 2</h3>
+                                        <p style="color:#fff;padding-top:0px;margin-bottom:0px;font-size:18px">Plates: MXO-798 </p>
+                                        <p style="color:#fff;padding-top:0px;margin-bottom:0px;font-size:18px">Driver: 7927 </p>
+                                        </div>
+                                    </div>
+                                    <br>
+                                </div>
+                                <div style="height:150px">
+                                    <br><br>
+                                    <div class="minicol1">
+                                      <label>
+                                        <input type="radio" name="trucks" value="bothtrucks" onclick="handleClick(this);"/>
+                                        <img src="http://pngimg.com/uploads/truck/truck_PNG16264.png" class="truck bootstrap-responsive">
+                                      </label>
+                                    </div>
+                                    <div class="minicol2">
+                                        <div style="padding-top:10px;padding-left:0px">
+                                            <h3 style="color:#fff;">Both Trucks</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                </form>
+                            </div>
+
+                            <div class="col2">
+                                <div id="map" style="width:90%;height:65%; display: block;margin-left:0"></div>
+                            </div>
+                            
+                            
 
                </div>
                 

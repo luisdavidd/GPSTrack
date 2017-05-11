@@ -7,8 +7,9 @@ var markerinit;
 var marker;
 var myinitialpot;
 var myLatLnglast;
-
-
+var globyxlive;
+var ctlive;
+var p3live;
 function loadjs(){
      $.post('php/update.php'); 
     init();
@@ -77,24 +78,44 @@ function initmap(){
 function init(){
     var temp = 0;
     var numb_init = 0;
+    ctlive = 0;
     $.post('php/changes.php',function(num){
        numb_init = num;
     });
     temp = numb_init;
     setInterval(function(){
+      
        $.post('php/changes.php',function(num){
         numb_init = num;
-       if(numb_init != temp) {
+       if(numb_init != temp || ctlive!=globyxlive) {
             temp = numb_init;
-            readData();
+            ctlive= globyxlive;
+            if(globyxlive==="truck1"){
+                p3live=1;
+            }else if(globyxlive=="truck2"){
+                p3live=2; 
+            }else if(globyxlive=="bothtrucks"){
+                p3live=3;
+            }else{
+                p3live=3; 
+            }
+            readData(p3live);
+
        }
     });
     }, 2000);
     
 }
 
-function readData(){  //This function fetches the requested php code and inserts it on the function defined
-    $.post('php/readata.php',function(coordinates){
+function readData(param){  //This function fetches the requested php code and inserts it on the function defined
+    if(param==1){
+        urltosendlive = 'php/readdatac1.php'
+    }else if(param==2){
+        urltosendlive = 'php/readdatac2.php'
+    }else{
+        urltosendlive = 'php/readata.php'
+    }
+    $.post(urltosendlive,function(coordinates){
         processreadData(coordinates)
     });
 }

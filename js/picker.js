@@ -5,6 +5,7 @@ var map;
 var flightPlanCoordinates;
 var flightBlack;
 var flightPath;
+var flightA;
 var markeri;
 var markerf;
 var myinitialpot;
@@ -22,6 +23,8 @@ var globyx;
 var p3;
 var urltosend;
 var ct;
+var polysArray = [];
+var polyB = 0;
 sendnrecieve();
 
 
@@ -46,15 +49,7 @@ function sendnrecieve(){
 	tempend = results[1];
     ct = 0;
 	setInterval(function(){
-            if(globyx==="truck1"){
-                p3=1;
-            }else if(globyx=="truck2"){
-                p3=2; 
-            }else if(globyx=="bothtrucks"){
-                p3=3;
-            }else{
-                p3=3; 
-            }
+            
 			results = initp();
 			newini = results[0];
 			newend = results[1];
@@ -64,8 +59,17 @@ function sendnrecieve(){
 				}else if(newend!= tempend){
 					tempend = newend;
 				}else if(ct!=globyx){
-                    console.log("Cambie puta madre")
+                    //console.log("Cambie puta madre")
                     ct= globyx;
+                    if(globyx==="truck1"){
+                        p3=1;
+                    }else if(globyx=="truck2"){
+                        p3=2; 
+                    }else if(globyx=="bothtrucks"){
+                        p3=3;
+                    }else{
+                        p3=3; 
+                    }
                 }
 				remake(newini,newend,p3);
 			}
@@ -88,6 +92,8 @@ function remake(param1,param2,param3){
      	data: ({init: param1,end:param2}),
 
      	success: function(coordinates){
+            //console.log(coordinates);
+
     		var entiredata = coordinates.split("*");
     		var coorC = [];
     		var latC  = [];
@@ -95,18 +101,26 @@ function remake(param1,param2,param3){
     		var dateC = [];
     		var timeC = [];
     		var positionC = [];
+            var routeC = [];
+            var faceC = [];
+            
     		for(i=0;i<entiredata.length;i++){
 		        coorC = entiredata[i].split(" ");
 		        latC.push(coorC[0]);
 		        lonC.push(coorC[1]);
 		        dateC.push(coorC[2]);
 		        timeC.push(coorC[3]);
-		        positionC.push(coorC[4]);
+                routeC.push(coorC[4]);
+                faceC.push(coorC[5]);
+
     		}
+
 		    delete latC[latC.length-1];
 		    delete lonC[lonC.length-1];
 		    delete dateC[dateC.length-1];
 		    delete timeC[timeC.length-1];
+            delete routeC[routeC.length-1];
+            delete faceC[faceC.length-1];
     		map.setOptions({styles: styles['retro']});
     		var myLatLng = new google.maps.LatLng(latC[Math.round((latC.length - 2) / 2)],lonC[Math.round((lonC.length - 2) / 2)]);
 		    var myOptions = {
@@ -120,28 +134,162 @@ function remake(param1,param2,param3){
 		        zoom: 17
 		    };
 
-            //Make Polyline
-            flightPlanCoordinates = [{lat:Number(latC[latC.length-2]),lng:Number(lonC[latC.length-2])}];
-            for(i=1;i<latC.length-1;i++){
-                flightPlanCoordinates.push({lat:Number(latC[(latC.length-2)-i]),lng:Number(lonC[(latC.length-2)-i])});
+            ////////////////////////////////////////////poly Array/////////////////////////////
+            
+
+            for (v=0;v<polysArray.length;v++){
+                polysArray[v].setMap(null);
+            } 
+            //console.log(Math.max(...routeC))
+            polysArray = [];
+            for(i=0;i<=16;i++){
+                var j = 0;
+                var ic = 0; 
+                var long = [];
+                var lati = [];
+                var indxs = [];
+                var d = 0;
+                //polysArray = [];
+
+                //flightA.setMap(null);
+                flightPlanCoordinates = [];
+                console.log("i:")
+                console.log(i)
+                while(routeC.indexOf(i.toString(),ic) != -1){
+                    indxs.push(routeC.indexOf(i.toString(),ic));
+                    //console.log("index:")
+                    //console.log(routeC.indexOf(i.toString(),ic))
+                    ic = routeC.indexOf(i.toString(),ic) +1;
+                }
+                console.log("length")
+                console.log(indxs.length)
+                
+                for(j=0;j<indxs.length;j++){
+                    long[j] = Number(lonC[indxs[j]]);
+                    lati[j] = Number(latC[indxs[j]]);  
+                }
+                //console.log(indxs.length)
+                //console.log(i)
+                flightPlanCoordinates = [{lat:Number(lati[lati.length-1]),lng:Number(long[lati.length-1])}];
+                console.log("long:")
+                console.log(long);
+                if(lati.length>1){
+                    d=1;
+                    for(m=1;m<lati.length;m++){
+                        flightPlanCoordinates.push({lat:Number(lati[(lati.length-1)-m]),lng:Number(long[(lati.length-1)-m])});
+                    }
+                    flightA = new google.maps.Polyline({
+                        path: flightPlanCoordinates,
+                        geodesic: true,
+                        clickable: false,
+                        strokeColor: '#FFCF00',
+                        //strokeColor: '#FFFFFF',
+                        strokeWeight: 5
+                    });
+
+                    flightA.setMap(map);
+                    polysArray.push(flightA);
+                    console.log("polyA")
+                    polyB = polysArray.length-1;
+                    polysArray[polysArray.length-1].setMap(map);
+                    myinitialpot = new google.maps.LatLng(lati[lati.length-1],long[lati.length-1]);
+                    myLatLnglast = new google.maps.LatLng(lati[0],long[0]);
+                    
+                }
+                //console.log(flightPlanCoordinates)
+                //flightA.setMap(null);
             }
+            //polysArray[polyB].setVisible(false);
+            //console.log("LongArray:")
+            //console.log(polysArray.length)
+            polfor();
+
+            function polfor(){
+
+                for(c=0; c<polysArray.length;c++){
+                    if(c!=polyB){
+                        polysArray[c].setOptions({clickable: true});
+                        google.maps.event.addListener(polysArray[c],'click',function(){
+                            mypoly(this);
+                        });
+                    }
+                    
+                 }
+            }
+             function mypoly(c){
+                for(i=0; i < polysArray.length; i++){
+                    if(c == polysArray[i]){
+                        polysArray[polyB].setOptions({clickable: true});
+                        polyB = i;
+                        polysArray[polyB].setOptions({clickable: false});
+                        flightPlanCoordinates = polysArray[i].getPath();
+                        flightPath.setPath(flightPlanCoordinates);
+                        flightBlack.setPath(flightPlanCoordinates);
+                        if(flightPlanCoordinates.length<2){
+                            flightPath.setVisible(false); 
+                            flightBlack.setVisible(false);
+                        }else{
+                            flightPath.setVisible(true);
+                            flightBlack.setVisible(true);
+                        }
+
+                        myinitialpot = flightPlanCoordinates.getAt(0); //flightPlanCoordinates[1];
+                        myLatLnglast = flightPlanCoordinates.getAt(flightPlanCoordinates.length-1); //flightPlanCoordinates[flightPlanCoordinates.length-1];
+                        markeri.setPosition(myinitialpot);
+                        markerf.setPosition(myLatLnglast);
+                        if(flightPlanCoordinates.length<2){
+                            markerf.setVisible(false); 
+                            markeri.setVisible(false);
+                        }else{
+                            markerf.setVisible(true);
+                            markeri.setVisible(true);
+                        }
+
+                        //console.log(flightPlanCoordinates);
+                    }
+                    polfor();
+                }
+                // polyB = c;
+                // console.log(c);
+             }
+            //////////////////////////////////////////////////////////////////////////////////
+
+            // //Make Polyline
+            // flightPlanCoordinates = [{lat:Number(latC[latC.length-2]),lng:Number(lonC[latC.length-2])}];
+            // for(i=1;i<latC.length-1;i++){
+            //     flightPlanCoordinates.push({lat:Number(latC[(latC.length-2)-i]),lng:Number(lonC[(latC.length-2)-i])});
+            // }
 
             flightPath.setPath(flightPlanCoordinates);
-		    flightBlack.setPath(flightPlanCoordinates);
-            console.log(flightPlanCoordinates)
+            console.log("polyPath")
+
+            flightBlack.setPath(flightPlanCoordinates);
+            console.log("polyNegra")
+
             if(flightPlanCoordinates.length<2){
-               flightPath.setVisible(false); 
+                flightPath.setVisible(false); 
+                flightBlack.setVisible(false);
             }else{
                 flightPath.setVisible(true);
+                flightBlack.setVisible(true);
             }
+            
 		    // Locate initial point
-		    myinitialpot = new google.maps.LatLng(latC[latC.length-2],lonC[latC.length-2]);
+		    //myinitialpot = new google.maps.LatLng(latC[latC.length-2],lonC[latC.length-2]);
     		markeri.setPosition(myinitialpot);
 
 		    //Locate last point
-		    myLatLnglast = new google.maps.LatLng(latC[0],lonC[0]) ;
-    
-    		markerf.setPosition(myLatLnglast); 
+		    //myLatLnglast = new google.maps.LatLng(latC[0],lonC[0]);
+            //console.log(myLatLnglast)
+    		markerf.setPosition(myLatLnglast);
+            if(flightPlanCoordinates.length<2){
+                markerf.setVisible(false); 
+                markeri.setVisible(false);
+            }else{
+                markerf.setVisible(true);
+                markeri.setVisible(true);
+            }
+ 
         }
 	}); 
 

@@ -79,6 +79,60 @@
         padding-right:10px;
         padding-bottom:10px;
     }
+    /*InfoWindow*/
+    .gm-style-iw {
+        width: 350px !important;
+        top: 15px !important;
+        left: 0px !important;
+        background-color: rgba(255, 198, 0, 0.66);
+        box-shadow: 0 1px 6px rgba(178, 178, 178, 0.6);
+        border: 1px solid rgba(72, 181, 233, 0.6);
+        border-radius: 2px 2px 10px 10px;
+    }
+    #iw-container {
+        margin-bottom: 10px;
+    }
+    #iw-container .iw-title {
+        font-family: 'Open Sans Condensed', sans-serif;
+        font-size: 22px;
+        font-weight: 400;
+        padding: 10px;
+        background-color: #000;
+        color: white;
+        margin: 0;
+        border-radius: 2px 2px 0 0;
+    }
+    #iw-container .iw-content {
+        font-size: 13px;
+        line-height: 18px;
+        font-weight: 400;
+        margin-right: 1px;
+        padding: 15px 5px 20px 15px;
+        max-height: 140px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background-color:#ffc600
+    }
+    .iw-content img {
+        float: right;
+        margin: 0 5px 5px 10px; 
+    }
+    .iw-subTitle {
+        font-size: 16px;
+        font-weight: 700;
+        padding: 5px 0;
+    }
+    .iw-bottom-gradient {
+        position: absolute;
+        width: 326px;
+        height: 25px;
+        bottom: 10px;
+        right: 18px;
+        background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+        background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,198,0,0.66) 100%);
+        background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+        background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+    }
 </style>
 <script type="text/javascript">
     var currentValue = 0;
@@ -103,7 +157,7 @@
         });
     </script> 
     
-    
+    <script type="text/javascript" src="js/jquery.js"></script>
     <script src="js/maphistoric.js?n=1"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCus7HdIsJX7I3Ny01zAZWVmwr6sy_Vky4&callback=initmapi" async defer></script>
 
@@ -270,7 +324,7 @@
             
         });
     </script>
-    <script type="text/javascript" src="js/picker.js?n=1"></script> 
+    <script type="text/javascript" src="js/picker.js?n=1" async></script> 
 </body>
 
 

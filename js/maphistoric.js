@@ -15,6 +15,11 @@ var stateb2=1;
 var popup;
 var goCenterUI;
 var goCenterText;
+var geocoder;
+var latgeo;
+var lnggeo;
+var direccion;
+var barrio;
 function loadjs(){
     init();
 }
@@ -103,9 +108,6 @@ function initmapi(){
     // google.maps.event.addDomListener(window, "resize", function() {
     //  google.maps.event.trigger(map, "resize");
     // });
-
-
-    
 }
 
 function init(){
@@ -121,14 +123,16 @@ function readData(){  //This function fetches the requested php code and inserts
 function processreadData(coordinates){
 
     
-    console.log(coordinates);
+    //console.log(coordinates);
     var entiredata = coordinates.split("*");
     var coorC = [];
     var latC  = [];
     var lonC  = []; 
     var dateC = [];
     var timeC = [];
-    var positionC = [];
+    var routeC = [];
+    var faceC = [];
+    var pathimC = [];
     var DATE;
     var TIME;
     //var markeraprox;
@@ -150,15 +154,20 @@ function processreadData(coordinates){
         lonC.push(coorC[1]);
         dateC.push(coorC[2]);
         timeC.push(coorC[3]);
-        positionC.push(coorC[4]);
+        routeC.push(coorC[4]);
+        faceC.push(coorC[5]);
+        pathimC.push(coorC[6])
 
     }
     delete latC[latC.length-1];
     delete lonC[lonC.length-1];
     delete dateC[dateC.length-1];
     delete timeC[timeC.length-1];
+    delete routeC[routeC.length-1];
+    delete faceC[faceC.length-1];
+    delete pathimC[pathimC.length-1];
 
-      console.log(typeof(latC[0]));
+    console.log(typeof(faceC[0]));
 
 
     aammddend = dateC[0].split("-");
@@ -190,7 +199,6 @@ function processreadData(coordinates){
     var myinitial = new google.maps.LatLng(latC[latC.length-2],lonC[lonC.length-2]);
     kinitial = latC.length-2;
     markeri = new google.maps.Marker({
-        position: myinitial,
         title: 'Start',
         label: '',
         icon: {
@@ -204,11 +212,10 @@ function processreadData(coordinates){
     var mylast = new google.maps.LatLng(latC[0],lonC[0]);
     kend = 0;
     markerf = new google.maps.Marker({
-        position: mylast,
         title: 'End',
         icon: {
         url: "images/truckoff.png",
-        scaledSize: new google.maps.Size(60*2/3, 78*2/3)
+        scaledSize: new google.maps.Size(60*2/3, 70*2/3)
     }
     });
     markerf.setMap(map); 
@@ -224,12 +231,15 @@ function processreadData(coordinates){
 
     flightPath = new google.maps.Polyline({
         path: flightPlanCoordinates,
+        visible: false,
         geodesic: true,
         strokeColor: '#FFCF00',
         //strokeColor: '#FFFFFF',
         strokeOpacity: 0.8,
-        strokeWeight: 5,
+        strokeWeight: 5
+        
     });
+    flightPath.setVisible(false);
 
     flightPath.setMap(map);
     if(isNaN(latC[0])==false){
@@ -240,10 +250,12 @@ function processreadData(coordinates){
     //Poly Negra
     flightBlack = new google.maps.Polyline({
         path: flightPlanCoordinates,
+        visible: false,
         geodesic: true,
         clickable: false,
         strokeColor: '#000000',
-        strokeWeight: 5
+        strokeWeight: 10
+        //visible = false
     });
     flightBlack.setMap(map);
     if(isNaN(latC[0])==false){
@@ -289,7 +301,7 @@ function areaData(){
     var centerlat = centerc.lat();
     var east = bounds.getNorthEast();
     var radiob = Math.abs(east.lng() - centerlng);
-
+    
     for(i=0;i<entiredata.length;i++){
     myLatLngLiteral = new google.maps.LatLng(latC[i],lonC[i]);
         
@@ -313,6 +325,10 @@ function areaData(){
         }
     }
 }
+
+  // alert("This travel took "+hours+" hours, "+min+" minutes with "+secs+" seconds ");
+   
+    
  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  /////////////////////////////////////////////////SWITCHEAR ICONOS INI & FIN////////////////////////////////////////////////////////////
 google.maps.event.addListener(markerf,'click',function(event){
@@ -332,6 +348,15 @@ if (iore==1){
     TIMEi = timeC[kinitial];
     DATEe = dateC[kend];
     TIMEe = timeC[kend];
+    Name = faceC[kend];
+    console.log("My name",faceC[kend])
+    if(Name.indexOf("_")!=-1){
+        Name = Name.split("_")[0]+' '+Name.split("_")[1]
+    }
+    PathFace = pathimC[kend];
+    if (Name=='0'){
+        Name = 'None';
+    }
     aammddend = DATEe.split("-");
     hhmmssend = TIMEe.split(":");
     aammddinit = DATEi.split("-");
@@ -361,15 +386,84 @@ if (iore==1){
         days = days - 1;
         hours = 24 + hours;
     } 
+    geocoder = new google.maps.Geocoder();
+    latgeo = latC[kend];
+    lnggeo = lonC[kend];
 
+    var latlnggeo = new google.maps.LatLng(latgeo, lnggeo);
+    geocoder.geocode({'latLng': latlnggeo}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+            direccion = results[0]['formatted_address'].split(',')[0]
+            barrio = results[1]['formatted_address']
+            document.getElementById("barrio").innerHTML = '<b>Barrio: </b>'+barrio+'.' ;
+            document.getElementById("direccion").innerHTML = '<b>Dirección: </b> '+direccion+'.' ;
+        }
 
-  // alert("This travel took "+hours+" hours, "+min+" minutes with "+secs+" seconds ");
+    });
+
+    // InfoWindow content
+    var content = '<div id="iw-container">' +
+                    '<div class="iw-title">Trip Info</div>' +
+                    '<div class="iw-content">' +
+                    '<div class="iw-subTitle">Person Detected: '+Name+' </div>' +
+                      '<img style="border-radius:25%" src="'+PathFace+'" alt="Person" height="115" width="83">' +
+                      '<div class="iw-subTitle">Trip Extension</div>' +
+                      '<p>This travel took '+days.toString()+' days with '+hours.toString()+' hours, '+min.toString()+' minutes with '+secs.toString()+' seconds. </p>'+
+                      '<div class="iw-subTitle">About this point</div>' +
+                      '<p><b>Date-time: </b> '+DATEe.toString()+' at '+TIMEe.toString()+'. </p>'+
+                      '<p id="barrio"><b>Barrio: </b>'+barrio+'. </p>'+
+                      '<p id="direccion"><b>Dirección: </b> '+direccion+'. </p>'+
+                    '</div>' +
+                    '<div class="iw-bottom-gradient"></div>' +
+                  '</div>';
     popup = new google.maps.InfoWindow({
-    content: '<div id="content">'+
-      '<p><b>Trip info </b></p>'+
-      '<p>This travel took '+days.toString()+' days with '+hours.toString()+' hours, '+min.toString()+' minutes with '+secs.toString()+' seconds. </p>'+
-      '<p><b>This point: </b> '+DATEe.toString()+' at '+TIMEe.toString()+'. </p>'+
-      '</div>'
+
+        content: content,
+        maxWidth:350
+    });
+    google.maps.event.addListener(popup, 'domready', function() {
+        // Reference to the DIV that wraps the bottom of infowindow
+        var iwOuter = $('.gm-style-iw');
+
+        /* Since this div is in a position prior to .gm-div style-iw.
+         * We use jQuery and create a iwBackground variable,
+         * and took advantage of the existing reference .gm-style-iw for the previous div with .prev().
+        */
+        var iwBackground = iwOuter.prev();
+
+        // Removes background shadow DIV
+        iwBackground.children(':nth-child(2)').css({'display' : 'none'});
+
+        // Removes white background DIV
+        iwBackground.children(':nth-child(4)').css({'display' : 'none'});
+
+        // Moves the infowindow 115px to the right.
+        iwOuter.parent().parent().css({left: '115px'});
+
+        // Moves the shadow of the arrow 76px to the left margin.
+        iwBackground.children(':nth-child(1)').attr('style', function(i,s){ return s + 'left: 76px !important;'});
+
+        // Moves the arrow 76px to the left margin.
+        iwBackground.children(':nth-child(3)').attr('style', function(i,s){ return s + 'left: 76px !important;'});
+
+        // Changes the desired tail shadow color.
+        iwBackground.children(':nth-child(3)').find('div').children().css({'box-shadow': 'rgba(72, 181, 233, 0.6) 0px 1px 6px', 'z-index' : '1'});
+
+        // Reference to the div that groups the close button elements.
+        var iwCloseBtn = iwOuter.next();
+
+        // Apply the desired effect to the close button
+        iwCloseBtn.css({opacity: '1', right: '45px', top: '8px', border: '7px solid rgb(254, 206, 26)', 'border-radius': '13px', 'box-shadow': 'rgb(254, 206, 26) 0px 0px 5px'});
+
+        // If the content of infowindow not exceed the set maximum height, then the gradient is removed.
+        if($('.iw-content').height() < 140){
+          $('.iw-bottom-gradient').css({display: 'none'});
+        }
+
+        // The API automatically applies 0.7 opacity to the button after the mouseout event. This function reverses this event to the desired value.
+        iwCloseBtn.mouseout(function(){
+          $(this).css({opacity: '1'});
+        });
     });
     popup.open(map, markerf);
 }
@@ -403,6 +497,14 @@ google.maps.event.addListener(markeri,'click',function(){
     TIMEi = timeC[kinitial];
     DATEe = dateC[kend];
     TIMEe = timeC[kend];
+    Name = faceC[kinitial];
+    PathFace = pathimC[kinitial];
+    if(Name.indexOf("_")!=-1){
+        Name = Name.split("_")[0]+' '+Name.split("_")[1]
+    }
+    if (Name=='0'){
+        Name = 'none';
+    }
     aammddend = DATEe.split("-");
     hhmmssend = TIMEe.split(":");
     aammddinit = DATEi.split("-");
@@ -434,13 +536,85 @@ google.maps.event.addListener(markeri,'click',function(){
 
 
     //hours = hours + days*24;
+    geocoder = new google.maps.Geocoder();
+    latgeo = latC[kinitial];
+    lnggeo = lonC[kinitial];
 
+    var latlnggeo = new google.maps.LatLng(latgeo, lnggeo);
+    geocoder.geocode({'latLng': latlnggeo}, function(results, status) {
+        console.log("Voy a hacer geocode")
+        if (status == google.maps.GeocoderStatus.OK) {
+            console.log(results[0]['formatted_address'].split(',')[0])
+            direccion = results[0]['formatted_address'].split(',')[0]
+            barrio = results[1]['formatted_address']
+            document.getElementById("barrio").innerHTML = '<b>Barrio: </b>'+barrio+'.' ;
+            document.getElementById("direccion").innerHTML = '<b>Dirección: </b> '+direccion+'.' ;
+        }
+
+    });
+    // InfoWindow content
+    var content = '<div id="iw-container">' +
+                    '<div class="iw-title">Trip Info</div>' +
+                    '<div class="iw-content">' +
+                    '<div class="iw-subTitle">Person Detected: '+Name+' </div>' +
+                      '<img style="border-radius:25%" src="'+PathFace+'" alt="Person" height="115" width="83">' +
+                      '<div class="iw-subTitle">Trip Extension</div>' +
+                      '<p>This travel took '+days.toString()+' days with '+hours.toString()+' hours, '+min.toString()+' minutes with '+secs.toString()+' seconds. </p>'+
+                      '<div class="iw-subTitle">About this point</div>' +
+                      '<p><b>Date-time: </b> '+DATEi.toString()+' at '+TIMEi.toString()+'. </p>'+
+                      '<p id="barrio"><b>Barrio: </b>'+barrio+'. </p>'+
+                      '<p id="direccion"><b>Dirección: </b> '+direccion+'. </p>'+
+                    '</div>' +
+                    '<div class="iw-bottom-gradient"></div>' +
+                  '</div>';
     popup = new google.maps.InfoWindow({
-    content: '<div id="content">'+
-      '<p><b>Trip info </b></p>'+
-      '<p>This travel took '+days.toString()+' days with '+hours.toString()+' hours, '+min.toString()+' minutes with '+secs.toString()+' seconds. </p>'+
-      '<p><b>This point: </b> '+DATEi.toString()+' at '+TIMEi.toString()+'. </p>'+
-      '</div>'
+
+        content: content,
+        maxWidth:350
+    });
+    google.maps.event.addListener(popup, 'domready', function() {
+        // Reference to the DIV that wraps the bottom of infowindow
+        var iwOuter = $('.gm-style-iw');
+
+        /* Since this div is in a position prior to .gm-div style-iw.
+         * We use jQuery and create a iwBackground variable,
+         * and took advantage of the existing reference .gm-style-iw for the previous div with .prev().
+        */
+        var iwBackground = iwOuter.prev();
+
+        // Removes background shadow DIV
+        iwBackground.children(':nth-child(2)').css({'display' : 'none'});
+
+        // Removes white background DIV
+        iwBackground.children(':nth-child(4)').css({'display' : 'none'});
+
+        // Moves the infowindow 115px to the right.
+        iwOuter.parent().parent().css({left: '115px'});
+
+        // Moves the shadow of the arrow 76px to the left margin.
+        iwBackground.children(':nth-child(1)').attr('style', function(i,s){ return s + 'left: 76px !important;'});
+
+        // Moves the arrow 76px to the left margin.
+        iwBackground.children(':nth-child(3)').attr('style', function(i,s){ return s + 'left: 76px !important;'});
+
+        // Changes the desired tail shadow color.
+        iwBackground.children(':nth-child(3)').find('div').children().css({'box-shadow': 'rgba(72, 181, 233, 0.6) 0px 1px 6px', 'z-index' : '1'});
+
+        // Reference to the div that groups the close button elements.
+        var iwCloseBtn = iwOuter.next();
+
+        // Apply the desired effect to the close button
+        iwCloseBtn.css({opacity: '1', right: '45px', top: '8px', border: '7px solid rgb(254, 206, 26)', 'border-radius': '13px', 'box-shadow': 'rgb(254, 206, 26) 0px 0px 5px'});
+
+        // If the content of infowindow not exceed the set maximum height, then the gradient is removed.
+        if($('.iw-content').height() < 140){
+          $('.iw-bottom-gradient').css({display: 'none'});
+        }
+
+        // The API automatically applies 0.7 opacity to the button after the mouseout event. This function reverses this event to the desired value.
+        iwCloseBtn.mouseout(function(){
+          $(this).css({opacity: '1'});
+        });
     });
     popup.open(map, markeri);
     }
@@ -449,12 +623,12 @@ iore = 0;
 
     markerf.setIcon({
         url: "images/truckoff.png",
-        scaledSize: new google.maps.Size(60*2/3, 78*2/3)
+        scaledSize: new google.maps.Size(60*2/3, 70*2/3)
     });
 
     markeri.setIcon({
         url: "images/init.png",
-        scaledSize: new google.maps.Size(60, 78)
+        scaledSize: new google.maps.Size(60, 70)
     }); 
         
 }); 
@@ -555,13 +729,118 @@ iore = 0;
 
     flightPath.setMap(map);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+google.maps.event.addListener(markerf,'mouseover',function(){
+    mde = markerf.getIcon();
+    var result = Object.keys(mde).map(function(e) {
+        return [Number(e), mde[e]];
+    }); 
+    mde = result[0]
+    console.log(mde[1])
+    if (mde[1]=="images/truckoff.png"){
+        markerf.setIcon({
+        url: "images/truckoff.png",
+        scaledSize: new google.maps.Size(60, 70)
+        });
+    }
+
+    if (mde[1]=="images/truck.png"){
+        markerf.setIcon({
+        url: "images/truck.png",
+        scaledSize: new google.maps.Size(72, 84)
+        });
+    }
+    console.log("mouseover")
+    //markerf.setOptions({scaledSize: true});
+    
+});
+google.maps.event.addListener(markerf,'mouseout',function(){
+    mde = markerf.getIcon();
+    var result = Object.keys(mde).map(function(e) {
+        return [Number(e), mde[e]];
+    }); 
+    mde = result[0]
+    if (mde[1]=="images/truckoff.png"){
+        markerf.setIcon({
+        url: "images/truckoff.png",
+        scaledSize: new google.maps.Size(60*2/3, 70*2/3)
+        });
+    }
+
+    if (mde[1]=="images/truck.png"){
+        markerf.setIcon({
+        url: "images/truck.png",
+        scaledSize: new google.maps.Size(60, 70)
+        });
+    }
+    console.log(mde[1])
+    console.log("mouseout")
+    
+});
+google.maps.event.addListener(markeri,'mouseover',function(){
+    mde = markeri.getIcon();
+    var result = Object.keys(mde).map(function(e) {
+        return [Number(e), mde[e]];
+    }); 
+    mde = result[0]
+    console.log(mde[1])
+    if (mde[1]=="images/initoff.png"){
+        markeri.setIcon({
+        url: "images/initoff.png",
+        scaledSize: new google.maps.Size(60, 70)
+        });
+    }
+
+    if (mde[1]=="images/init.png"){
+        markeri.setIcon({
+        url: "images/init.png",
+        scaledSize: new google.maps.Size(72, 84)
+        });
+    }
+    console.log("mouseover")
+    //markeri.setOptions({scaledSize: true});
+    
+});
+google.maps.event.addListener(markeri,'mouseout',function(){
+    mde = markeri.getIcon();
+    var result = Object.keys(mde).map(function(e) {
+        return [Number(e), mde[e]];
+    }); 
+    mde = result[0]
+    if (mde[1]=="images/initoff.png"){
+        markeri.setIcon({
+        url: "images/initoff.png",
+        scaledSize: new google.maps.Size(60*2/3, 70*2/3)
+        });
+    }
+
+    if (mde[1]=="images/init.png"){
+        markeri.setIcon({
+        url: "images/init.png",
+        scaledSize: new google.maps.Size(60, 70)
+        });
+    }
+    console.log(mde[1])
+    
+    
+});
+google.maps.event.addListener(flightPath,'mouseover',function(){
+    //strokeColor: '#FFFFFF'
+    flightBlack.setOptions({strokeWeight: 13});
+    console.log("mouseout")
+});
+google.maps.event.addListener(flightPath,'mouseout',function(){
+    //strokeColor: '#FFFFFF'
+    flightBlack.setOptions({strokeWeight: 10});
+    console.log("mouseout")
+});
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 google.maps.event.addListener(map,'click',function(){
 
     popup.close();
     
 });
- //AQUI ESTA EL LISTENER DEL BOTON 1
+
+//AQUI ESTA EL LISTENER DEL BOTON 1
     goCenterUI.addEventListener('click', function() {
       // var currentCenter = control.getCenter();
       // map.setCenter(currentCenter);
@@ -577,7 +856,6 @@ google.maps.event.addListener(map,'click',function(){
         } 
       }
     });
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  }  
